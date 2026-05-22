@@ -881,6 +881,29 @@ dependencies = [
 ]
 
 [[package]]
+name = "sem_os_policy"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "async-trait",
+ "chrono",
+ "hex",
+ "sem_os_core",
+ "sem_os_ontology",
+ "sem_os_types",
+ "serde",
+ "serde_json",
+ "serde_yaml",
+ "sha2",
+ "sqlparser",
+ "strum",
+ "thiserror",
+ "tokio",
+ "tracing",
+ "uuid",
+]
+
+[[package]]
 name = "sem_os_types"
 version = "0.1.0"
 dependencies = [

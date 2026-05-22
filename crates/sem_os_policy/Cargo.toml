@@ -1,0 +1,52 @@
+[package]
+name = "sem_os_policy"
+version = "0.1.0"
+edition = "2021"
+description = "Semantic OS governance + projection plane. Owns ABAC primitives, gate logic, policy enforcement, ACP discovery projection, affinity graph, observatory orientation/projection, stewardship + authoring lifecycle, state simulation, context policy/resolution, diagram emission. Decides *what may happen* and projects *what is shown*."
+
+# Capability discipline (see docs/todo/sem-os-core-split-v1.md §2.3):
+#   IN-SCOPE: ABAC, gates, enforcement, projection, observatory, affinity,
+#             authoring lifecycle, stewardship, state simulation, context
+#             policy/resolution, diagram emission, grounding, security labels.
+#   OUT-OF-SCOPE: defining new ontology shapes (that's sem_os_ontology),
+#                 engine primitives (that's sem_os_core), database
+#                 persistence (that's sem_os_postgres).
+#
+# Hard invariant: sem_os_policy MUST be the most-downstream of the three;
+# sem_os_ontology and sem_os_core never depend on it.
+
+[dependencies]
+# Phase 9 (2026-05-14): authoring/, stewardship/, observatory/, and
+# service.rs joined sem_os_policy. They reach `sem_os_core::{error,
+# principal, ports}` — the policy → core direction the ADR §2.4 graph
+# explicitly allows. The cycle that blocked this dep being added
+# earlier is gone: sem_os_core no longer has compat re-exports of any
+# sem_os_policy modules (eager consumer rewrite done in the same slice).
+sem_os_core.workspace = true
+sem_os_ontology.workspace = true
+sem_os_types.workspace = true
+
+# Phase 9 third-party deps inherited from the moved modules:
+# authoring/* uses ob-poc-types + sqlparser + tokio; service.rs uses
+# tokio + tracing; observatory uses tracing; authoring + stewardship
+# both use async_trait for store traits.
+async-trait = "0.1"
+serde_yaml = "0.9"
+sqlparser = "0.53"
+tokio = { version = "1", features = ["sync"] }
+tracing = "0.1"
+
+# Third-party — sha2 for context_policy fingerprinting; standard
+# primitives elsewhere.
+anyhow = "1.0"
+chrono = { version = "0.4", features = ["serde"] }
+hex = "0.4"
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+sha2 = "0.10"
+strum = { version = "0.26", features = ["derive"] }
+thiserror = "1.0"
+uuid = { version = "1", features = ["v4", "v5", "serde"] }
+
+[lints.rust]
+unreachable_pub = "deny"
