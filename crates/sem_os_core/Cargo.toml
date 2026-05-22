@@ -10,8 +10,8 @@ description = "Semantic OS core — pure domain types, port traits, gate logic. 
 # (`pub use sem_os_types::*;`). This dep stays after migration —
 # sem_os_types is the bottom tier every SemOS-touching crate needs.
 sem_os_types = { path = "../sem_os_types" }
-dsl-core = { path = "../../dsl/crates/dsl-core" }
-dsl_types = { path = "../../dsl/crates/dsl_types" }
+dsl-core = { path = "../../../dsl/crates/dsl-core" }
+dsl_types = { path = "../../../dsl/crates/dsl_types" }
 # Phase 9-prep (2026-05-14): the transitional sem_os_ontology and
 # sem_os_policy compat re-export deps are GONE — Phase 9 needs
 # sem_os_policy → sem_os_core (for error/principal/ports in authoring/
@@ -41,7 +41,13 @@ tokio = { version = "1", features = ["macros", "rt"] }
 # sem_os_ontology). Dev-only path-deps don't violate the "no upward
 # Cargo edge" invariant — they're only linked into the test binary.
 sem_os_ontology = { path = "../sem_os_ontology" }
-sem_os_policy = { path = "../../ob-poc/rust/crates/sem_os_policy" }
+# sem_os_policy is in ob-poc (cross-repo). To run discovery_pipeline tests
+# locally, copy .cargo/config.toml.example → .cargo/config.toml and add
+# sem_os_policy as a path override pointing to your ob-poc checkout.
+# It is omitted here to avoid a Cargo lockfile collision between the ob-poc
+# workspace's path-source copies of sem_os_core/ontology/types/dsl_types
+# and the canonical copies in this workspace.
+# sem_os_policy = { path = "../../../../Developer/ob-poc/rust/crates/sem_os_policy" }
 tempfile = "3"
 
 [build-dependencies]
