@@ -1,0 +1,51 @@
+[package]
+name = "sem_os_core"
+version = "0.1.0"
+edition = "2021"
+description = "Semantic OS core — pure domain types, port traits, gate logic. Zero sqlx."
+
+[dependencies]
+# sem_os_core-split v1 Phase 2.5 (2026-05-14): types.rs extracted to
+# sem_os_types crate. sem_os_core/src/types.rs is now a compat shim
+# (`pub use sem_os_types::*;`). This dep stays after migration —
+# sem_os_types is the bottom tier every SemOS-touching crate needs.
+sem_os_types = { path = "../sem_os_types" }
+dsl-core = { path = "../../dsl/crates/dsl-core" }
+dsl_types = { path = "../../dsl/crates/dsl_types" }
+# Phase 9-prep (2026-05-14): the transitional sem_os_ontology and
+# sem_os_policy compat re-export deps are GONE — Phase 9 needs
+# sem_os_policy → sem_os_core (for error/principal/ports in authoring/
+# stewardship/observatory), and that direction conflicts with the
+# back-edge created by the compat re-exports. All consumers were
+# bulk-rewritten to use sem_os_ontology::* / sem_os_policy::* directly.
+async-trait = "0.1"
+tokio = { version = "1", features = ["sync"] }
+thiserror = "1.0"
+anyhow = "1.0"
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+sha2 = "0.10"
+hex = "0.4"
+prost = "0.13"
+serde_yaml = "0.9"
+sqlparser = "0.53"
+strum = { version = "0.26", features = ["derive"] }
+tracing = "0.1"
+uuid = { version = "1", features = ["v4", "v5", "serde"] }
+chrono = { version = "0.4", features = ["serde"] }
+
+[dev-dependencies]
+tokio = { version = "1", features = ["macros", "rt"] }
+# discovery_pipeline test exercises affinity + verb_contract — both
+# relocated in Phase 9 (affinity → sem_os_policy, verb_contract →
+# sem_os_ontology). Dev-only path-deps don't violate the "no upward
+# Cargo edge" invariant — they're only linked into the test binary.
+sem_os_ontology = { path = "../sem_os_ontology" }
+sem_os_policy = { path = "../../ob-poc/rust/crates/sem_os_policy" }
+tempfile = "3"
+
+[build-dependencies]
+prost-build = "0.13"
+
+[lints.rust]
+unreachable_pub = "deny"

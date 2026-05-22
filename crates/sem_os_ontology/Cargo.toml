@@ -1,0 +1,41 @@
+[package]
+name = "sem_os_ontology"
+version = "0.1.0"
+edition = "2021"
+description = "Semantic OS ontology vocabulary — the *_def family. Definition bodies for everything SemOS catalogues: attributes, entity types, document types, relationship types, state graphs, taxonomies, verbs, views, requirement profiles, evidence strategies, observations, etc. Pure data-with-validation; no ABAC, no projection, no enforcement."
+
+# Capability discipline (see docs/todo/sem-os-core-split-v1.md §2.2):
+#   IN-SCOPE: the *_def family. Definitions of *what exists in the world*.
+#   OUT-OF-SCOPE: ABAC, gate evaluation, projection, registry mutation,
+#                 enforcement, observation/projection. Those are policy-tier.
+#
+# Hard invariant: no edge from sem_os_ontology → sem_os_policy.
+# Hard invariant: no edge from sem_os_core → sem_os_ontology
+#                 (core knows nothing about ontology).
+
+[dependencies]
+# Level 0 substrate — constellation_map_def lives here after Phase 1.
+dsl_types = { path = "../../dsl/crates/dsl_types" }
+
+# Phase 2 (pure-type leaves): policy_rule, observation_def, verb_contract,
+# view_def, taxonomy_def, universe_def, requirement_profile_def,
+# relationship_type_def, state_machine_def. serde + serde_json::Value
+# in inline field types (caught at slice time, not by `^use ` grep).
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+
+# Phase 3 (body-with-types ontology): attribute_def + derivation_spec
+# import the AttributeVisibility/EvidenceGrade enums from sem_os_types.
+# Other Phase 3 modules need chrono, uuid, anyhow, hex, sha2, strum
+# inline (caught at slice time).
+sem_os_types = { path = "../sem_os_types" }
+anyhow = "1.0"
+chrono = { version = "0.4", features = ["serde"] }
+hex = "0.4"
+serde_yaml = "0.9"
+sha2 = "0.10"
+strum = { version = "0.26", features = ["derive"] }
+uuid = { version = "1", features = ["v4", "v5", "serde"] }
+
+[lints.rust]
+unreachable_pub = "deny"

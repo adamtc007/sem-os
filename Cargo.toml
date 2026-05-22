@@ -1,0 +1,10 @@
+[workspace]
+members = [
+    "crates/sem_os_types",
+    "crates/sem_os_core",
+    "crates/sem_os_ontology",
+]
+resolver = "2"
+
+[workspace.lints.rust]
+unreachable_pub = "deny"

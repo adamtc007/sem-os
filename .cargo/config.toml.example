@@ -1,0 +1,10 @@
+# Local-dev override — copy to .cargo/config.toml (git-ignored) when editing
+# sem-os alongside ob-poc or dsl.
+#
+# Once github.com/adamtc007/dsl is live, replace cross-repo path deps with:
+#   dsl_types = { git = "https://github.com/adamtc007/dsl", tag = "v0.1.0" }
+#   dsl-core  = { git = "https://github.com/adamtc007/dsl", tag = "v0.1.0" }
+# Then the patch section becomes:
+#   [patch."https://github.com/adamtc007/dsl"]
+#   dsl_types = { path = "../dsl/crates/dsl_types" }
+#   dsl-core  = { path = "../dsl/crates/dsl-core"  }

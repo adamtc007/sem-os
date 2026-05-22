@@ -1,0 +1,23 @@
+[package]
+name = "sem_os_types"
+version = "0.1.0"
+edition = "2021"
+description = "Semantic OS foundational vocabulary — Classification, EvidenceGrade, SecurityLabel, ObjectType, SnapshotRow, AttributeVisibility, GovernanceTier. The bottom tier every SemOS-touching crate depends on."
+
+# Capability discipline (see docs/todo/sem-os-core-split-v1.md §2.0):
+#   IN-SCOPE: shared vocabulary enums + DTOs that don't need workspace deps.
+#   OUT-OF-SCOPE: anything that needs another workspace crate. If it grows
+#                 such a need, it belongs in sem_os_core (engine) or
+#                 sem_os_ontology (vocabulary bodies), not here.
+#
+# Hard invariant: sem_os_types depends on no workspace crate.
+
+[dependencies]
+chrono = { version = "0.4", features = ["serde"] }
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+strum = { version = "0.26", features = ["derive"] }
+uuid = { version = "1", features = ["v4", "v5", "serde"] }
+
+[lints.rust]
+unreachable_pub = "deny"
