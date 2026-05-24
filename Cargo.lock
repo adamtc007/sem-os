@@ -849,6 +849,7 @@ dependencies = [
  "prost",
  "prost-build",
  "sem_os_ontology",
+ "sem_os_policy",
  "sem_os_types",
  "serde",
  "serde_json",

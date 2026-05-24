@@ -41,13 +41,10 @@ tokio = { version = "1", features = ["macros", "rt"] }
 # sem_os_ontology). Dev-only path-deps don't violate the "no upward
 # Cargo edge" invariant — they're only linked into the test binary.
 sem_os_ontology = { path = "../sem_os_ontology" }
-# sem_os_policy is in ob-poc (cross-repo). To run discovery_pipeline tests
-# locally, copy .cargo/config.toml.example → .cargo/config.toml and add
-# sem_os_policy as a path override pointing to your ob-poc checkout.
-# It is omitted here to avoid a Cargo lockfile collision between the ob-poc
-# workspace's path-source copies of sem_os_core/ontology/types/dsl_types
-# and the canonical copies in this workspace.
-# sem_os_policy = { path = "../../../../Developer/ob-poc/rust/crates/sem_os_policy" }
+# sem_os_policy was extracted into this sem-os workspace at v0.1.2
+# (commit 0de07aa), so the discovery_pipeline test can wire it as a
+# normal sibling dev-dep — no cross-repo override needed.
+sem_os_policy = { path = "../sem_os_policy" }
 tempfile = "3"
 
 [build-dependencies]
