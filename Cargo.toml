@@ -14,8 +14,8 @@ sem_os_core     = { path = "crates/sem_os_core"  }
 sem_os_ontology = { path = "crates/sem_os_ontology" }
 sem_os_policy   = { path = "crates/sem_os_policy"   }
 # Cross-repo dsl library — local [patch] in .cargo/config.toml overrides during dev
-dsl_types = { git = "https://github.com/adamtc007/dsl", tag = "v0.1.0" }
-dsl-core  = { git = "https://github.com/adamtc007/dsl", tag = "v0.1.0" }
+dsl_types = { git = "https://github.com/adamtc007/dsl", tag = "v0.1.2" }
+dsl-core  = { git = "https://github.com/adamtc007/dsl", tag = "v0.1.2" }
 
 [workspace.lints.rust]
 unreachable_pub = "deny"
