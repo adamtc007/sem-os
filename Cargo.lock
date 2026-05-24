@@ -1553,3 +1553,51 @@ name = "zmij"
 version = "1.0.21"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "b8848ee67ecc8aedbaf3e4122217aff892639231befc6a1b58d29fff4c2cabaa"
+
+[[patch.unused]]
+name = "bpmn-lite-engine"
+version = "0.1.0"
+
+[[patch.unused]]
+name = "bpmn-lite-ffi-grpc"
+version = "0.1.0"
+
+[[patch.unused]]
+name = "bpmn-lite-ffi-http"
+version = "0.1.0"
+
+[[patch.unused]]
+name = "bpmn-lite-server"
+version = "0.1.0"
+
+[[patch.unused]]
+name = "bpmn-lite-store"
+version = "0.1.0"
+
+[[patch.unused]]
+name = "dmn-lite-bridge"
+version = "0.1.0"
+
+[[patch.unused]]
+name = "dsl-bus-client"
+version = "0.1.0"
+
+[[patch.unused]]
+name = "dsl-bus-protocol"
+version = "0.1.0"
+
+[[patch.unused]]
+name = "dsl-bus-server"
+version = "0.1.0"
+
+[[patch.unused]]
+name = "dsl-bus-storage"
+version = "0.1.0"
+
+[[patch.unused]]
+name = "dsl-manifest"
+version = "0.1.0"
+
+[[patch.unused]]
+name = "ffi-catalogue"
+version = "0.1.0"

@@ -1,16 +1,11 @@
 use sem_os_ontology::constellation_map_def::{
     Cardinality, ClosureType, ConstellationMapDefBody, EligibilityConstraint,
 };
-use std::{collections::BTreeMap, fs, path::PathBuf};
-
-#[derive(serde::Deserialize)]
-struct SeedConstellationMap {
-    slots: BTreeMap<String, sem_os_ontology::constellation_map_def::SlotDef>,
-}
-
-fn constellation_dir() -> PathBuf {
-    PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("../../config/sem_os_seeds/constellation_maps")
-}
+// `existing_constellation_maps_parse_with_batch_1a_defaults` previously
+// walked ob-poc's constellation_maps/ dir to assert every authored YAML
+// round-trips under the Batch 1A schema. After sem-os was extracted,
+// those YAMLs live in ob-poc; the test moved there as an integration
+// test against the published sem_os_core / sem_os_ontology crates.
 
 #[test]
 fn slot_def_gate_metadata_batch_1a_round_trips() {
@@ -261,30 +256,3 @@ slots:
     assert!(slot.completeness_assertion.is_none());
 }
 
-#[test]
-fn existing_constellation_maps_parse_with_batch_1a_defaults() {
-    let mut count = 0usize;
-    for entry in fs::read_dir(constellation_dir()).expect("constellation dir readable") {
-        let path = entry.expect("dir entry").path();
-        let is_yaml = path
-            .extension()
-            .and_then(|ext| ext.to_str())
-            .is_some_and(|ext| matches!(ext, "yaml" | "yml"));
-        if !is_yaml {
-            continue;
-        }
-        let contents = fs::read_to_string(&path).expect("map readable");
-        let parsed: SeedConstellationMap =
-            serde_yaml::from_str(&contents).unwrap_or_else(|err| panic!("{path:?}: {err}"));
-        assert!(
-            !parsed.slots.is_empty(),
-            "{path:?}: expected at least one slot"
-        );
-        count += 1;
-    }
-
-    assert!(
-        count > 0,
-        "expected to parse at least one seed constellation map"
-    );
-}

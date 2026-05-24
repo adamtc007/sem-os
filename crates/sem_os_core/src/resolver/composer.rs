@@ -95,12 +95,6 @@ impl ResolverInputs {
         Self::from_seed_root(config_dir.into().join("sem_os_seeds"))
     }
 
-    pub fn default_from_cargo_manifest() -> Result<Self> {
-        Self::from_workspace_config_dir(
-            PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("../../config"),
-        )
-    }
-
     pub fn legacy_constellation_stack(
         &self,
         constellation_id: &str,

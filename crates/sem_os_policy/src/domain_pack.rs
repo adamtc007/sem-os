@@ -1503,7 +1503,14 @@ mod tests {
         );
     }
 
+    // The following tests parse ob-poc-owned seed YAML (ob_poc_kyc.yaml,
+    // ob_poc_cbu.yaml, etc.) via CARGO_MANIFEST_DIR/../../config. After
+    // sem-os was extracted that path resolves to ~/dev/sem-os/config —
+    // which doesn't exist. They run as integration tests in ob-poc against
+    // the published sem_os_policy crate where the data is local.
+
     #[test]
+    #[ignore = "requires ob-poc config dir; integration test (runs in ob-poc CI)"]
     fn ob_poc_kyc_seed_pack_parses_and_validates() {
         let path = PathBuf::from(env!("CARGO_MANIFEST_DIR"))
             .join("../../config/sem_os_seeds/domain_packs/ob_poc_kyc.yaml");
@@ -1522,6 +1529,7 @@ mod tests {
     }
 
     #[test]
+    #[ignore = "requires ob-poc config dir; integration test (runs in ob-poc CI)"]
     fn ob_poc_cbu_seed_pack_parses_and_validates() {
         let path = PathBuf::from(env!("CARGO_MANIFEST_DIR"))
             .join("../../config/sem_os_seeds/domain_packs/ob_poc_cbu.yaml");
@@ -1541,6 +1549,7 @@ mod tests {
     }
 
     #[test]
+    #[ignore = "requires ob-poc config dir; integration test (runs in ob-poc CI)"]
     fn cbu_taxonomy_reload_from_yaml_is_idempotent() {
         let config_root = PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("../../config");
 
@@ -1558,6 +1567,7 @@ mod tests {
     }
 
     #[test]
+    #[ignore = "requires ob-poc config dir; integration test (runs in ob-poc CI)"]
     fn reload_index_skips_when_source_fingerprints_match() {
         let config_root = PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("../../config");
         let now = Utc::now();
@@ -1586,6 +1596,7 @@ mod tests {
     }
 
     #[test]
+    #[ignore = "requires ob-poc config dir; integration test (runs in ob-poc CI)"]
     fn reload_index_updates_only_when_fingerprint_changed_but_hash_matches() {
         let config_root = PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("../../config");
         let now = Utc::now();
@@ -1615,6 +1626,7 @@ mod tests {
     }
 
     #[test]
+    #[ignore = "requires ob-poc config dir; integration test (runs in ob-poc CI)"]
     fn reload_index_requires_publish_without_prior_index() {
         let config_root = PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("../../config");
 
@@ -1636,6 +1648,7 @@ mod tests {
     }
 
     #[test]
+    #[ignore = "requires ob-poc config dir; integration test (runs in ob-poc CI)"]
     fn all_domain_packs_reload_idempotently_and_cover_dsl_surfaces() {
         let config_root = PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("../../config");
 
