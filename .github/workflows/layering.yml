@@ -1,0 +1,15 @@
+name: Layering guard
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  guard:
+    name: sem-os has no ob-poc domain/app dependency
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Layering guard
+        run: bash scripts/check-layering.sh

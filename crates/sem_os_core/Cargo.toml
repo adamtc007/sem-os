@@ -10,8 +10,8 @@ description = "Semantic OS core — pure domain types, port traits, gate logic. 
 # (`pub use sem_os_types::*;`). This dep stays after migration —
 # sem_os_types is the bottom tier every SemOS-touching crate needs.
 sem_os_types = { path = "../sem_os_types" }
-dsl-core = { path = "../../../dsl/crates/dsl-core" }
-dsl_types = { path = "../../../dsl/crates/dsl_types" }
+dsl-core.workspace = true
+dsl_types.workspace = true
 # Phase 9-prep (2026-05-14): the transitional sem_os_ontology and
 # sem_os_policy compat re-export deps are GONE — Phase 9 needs
 # sem_os_policy → sem_os_core (for error/principal/ports in authoring/

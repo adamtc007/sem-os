@@ -15,7 +15,7 @@ description = "Semantic OS ontology vocabulary — the *_def family. Definition 
 
 [dependencies]
 # Level 0 substrate — constellation_map_def lives here after Phase 1.
-dsl_types = { path = "../../../dsl/crates/dsl_types" }
+dsl_types.workspace = true
 
 # Phase 2 (pure-type leaves): policy_rule, observation_def, verb_contract,
 # view_def, taxonomy_def, universe_def, requirement_profile_def,
