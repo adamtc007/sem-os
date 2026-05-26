@@ -16,7 +16,7 @@
 
 pub mod error;
 pub(crate) mod execution; // empty placeholder pending removal — not in external import surface
-pub(crate) mod frontier;  // internal crate utility — not imported by any consumer
+pub(crate) mod frontier;  // implementation module — hydrate_frontier re-exported at crate root below
 pub mod ids;
 pub mod ports;
 pub mod principal;
@@ -24,3 +24,6 @@ pub mod proto;
 pub mod resolver;
 pub mod seeds;
 pub mod types;
+
+// ── Crate-root re-exports ───────────────────────────────────────────────────
+pub use frontier::hydrate_frontier; // consumed by dsl-core integration tests

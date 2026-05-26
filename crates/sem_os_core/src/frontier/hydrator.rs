@@ -31,7 +31,7 @@ use dsl_types::constellation_map_def::Cardinality;
 /// assert_eq!(frontier.current_state, "PENDING");
 /// # Ok::<(), dsl_core::frontier::HydrateFrontierError>(())
 /// ```
-pub(crate) fn hydrate_frontier(
+pub fn hydrate_frontier(
     entity_ref: EntityRef,
     resolved_template: &ResolvedTemplate,
 ) -> Result<InstanceFrontier, HydrateFrontierError> {
