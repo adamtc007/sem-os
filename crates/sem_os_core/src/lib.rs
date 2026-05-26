@@ -10,9 +10,13 @@
 //! Foundational vocabulary (Classification, EvidenceGrade, SecurityLabel,
 //! Changeset, ChangeSetStatus, …) lives in `sem_os_types`.
 
+// ── Public API surface ──────────────────────────────────────────────────────
+// `pub(crate)` modules are implementation detail — not accessible to consumers.
+// ─────────────────────────────────────────────────────────────────────────────
+
 pub mod error;
-pub mod execution;
-pub mod frontier;
+pub(crate) mod execution; // empty placeholder pending removal — not in external import surface
+pub(crate) mod frontier;  // internal crate utility — not imported by any consumer
 pub mod ids;
 pub mod ports;
 pub mod principal;

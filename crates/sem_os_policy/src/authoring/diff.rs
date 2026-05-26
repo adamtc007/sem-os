@@ -7,7 +7,7 @@ use std::collections::HashMap;
 use super::types::*;
 
 /// Compute a structural diff between two sets of artifacts.
-pub fn diff_changesets(base: &[ChangeSetArtifact], target: &[ChangeSetArtifact]) -> DiffSummary {
+pub(crate) fn diff_changesets(base: &[ChangeSetArtifact], target: &[ChangeSetArtifact]) -> DiffSummary {
     let base_map = build_artifact_index(base);
     let target_map = build_artifact_index(target);
 
@@ -123,7 +123,7 @@ fn extract_json_field(json_content: &str, field: &str) -> Option<String> {
 }
 
 /// Compute a summary of a single ChangeSet's artifacts for planning purposes.
-pub fn summarize_changeset(artifacts: &[ChangeSetArtifact]) -> DiffSummary {
+pub(crate) fn summarize_changeset(artifacts: &[ChangeSetArtifact]) -> DiffSummary {
     let added: Vec<DiffEntry> = artifacts
         .iter()
         .map(|a| DiffEntry {

@@ -11,7 +11,7 @@ use uuid::Uuid;
 use super::types::{ChangeSetStatus, DiffSummary, DryRunReport, ValidationReport};
 
 /// Emit a structured tracing event for `propose_change_set`.
-pub fn emit_propose(change_set_id: Uuid, title: &str, idempotent_hit: bool) {
+pub(crate) fn emit_propose(change_set_id: Uuid, title: &str, idempotent_hit: bool) {
     tracing::info!(
         target: "authoring.propose",
         %change_set_id,
@@ -22,7 +22,7 @@ pub fn emit_propose(change_set_id: Uuid, title: &str, idempotent_hit: bool) {
 }
 
 /// Emit a structured tracing event for `validate_change_set`.
-pub fn emit_validate(change_set_id: Uuid, report: &ValidationReport) {
+pub(crate) fn emit_validate(change_set_id: Uuid, report: &ValidationReport) {
     let error_count = report.errors.len();
     let warning_count = report.warnings.len();
     tracing::info!(
@@ -36,7 +36,7 @@ pub fn emit_validate(change_set_id: Uuid, report: &ValidationReport) {
 }
 
 /// Emit a structured tracing event for `dry_run_change_set`.
-pub fn emit_dry_run(change_set_id: Uuid, report: &DryRunReport) {
+pub(crate) fn emit_dry_run(change_set_id: Uuid, report: &DryRunReport) {
     let error_count = report.errors.len();
     let warning_count = report.warnings.len();
     let apply_ms = report.scratch_schema_apply_ms.unwrap_or(0);
@@ -52,7 +52,7 @@ pub fn emit_dry_run(change_set_id: Uuid, report: &DryRunReport) {
 }
 
 /// Emit a structured tracing event for `plan_publish`.
-pub fn emit_plan_publish(change_set_id: Uuid, diff: &DiffSummary) {
+pub(crate) fn emit_plan_publish(change_set_id: Uuid, diff: &DiffSummary) {
     let added = diff.added.len();
     let modified = diff.modified.len();
     let removed = diff.removed.len();
@@ -69,7 +69,7 @@ pub fn emit_plan_publish(change_set_id: Uuid, diff: &DiffSummary) {
 }
 
 /// Emit a structured tracing event for `publish_snapshot_set`.
-pub fn emit_publish(change_set_id: Uuid, batch_id: Uuid, publisher: &str) {
+pub(crate) fn emit_publish(change_set_id: Uuid, batch_id: Uuid, publisher: &str) {
     tracing::info!(
         target: "authoring.publish",
         %change_set_id,
@@ -80,7 +80,7 @@ pub fn emit_publish(change_set_id: Uuid, batch_id: Uuid, publisher: &str) {
 }
 
 /// Emit a structured tracing event for `publish_batch`.
-pub fn emit_publish_batch(batch_id: Uuid, count: usize, publisher: &str) {
+pub(crate) fn emit_publish_batch(batch_id: Uuid, count: usize, publisher: &str) {
     tracing::info!(
         target: "authoring.publish_batch",
         %batch_id,
@@ -91,7 +91,7 @@ pub fn emit_publish_batch(batch_id: Uuid, count: usize, publisher: &str) {
 }
 
 /// Emit a structured tracing event for `diff_change_sets`.
-pub fn emit_diff(base_id: Uuid, target_id: Uuid, diff: &DiffSummary) {
+pub(crate) fn emit_diff(base_id: Uuid, target_id: Uuid, diff: &DiffSummary) {
     let added = diff.added.len();
     let modified = diff.modified.len();
     let removed = diff.removed.len();
@@ -107,7 +107,7 @@ pub fn emit_diff(base_id: Uuid, target_id: Uuid, diff: &DiffSummary) {
 }
 
 /// Emit a structured tracing event for status transitions.
-pub fn emit_status_transition(change_set_id: Uuid, from: ChangeSetStatus, to: ChangeSetStatus) {
+pub(crate) fn emit_status_transition(change_set_id: Uuid, from: ChangeSetStatus, to: ChangeSetStatus) {
     tracing::info!(
         target: "authoring.status_transition",
         %change_set_id,
@@ -118,7 +118,7 @@ pub fn emit_status_transition(change_set_id: Uuid, from: ChangeSetStatus, to: Ch
 }
 
 /// Emit a warning event for governance verb errors.
-pub fn emit_governance_error(verb: &str, change_set_id: Option<Uuid>, error: &str) {
+pub(crate) fn emit_governance_error(verb: &str, change_set_id: Option<Uuid>, error: &str) {
     tracing::warn!(
         target: "authoring.error",
         verb,

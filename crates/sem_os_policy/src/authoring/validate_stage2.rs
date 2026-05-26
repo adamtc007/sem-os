@@ -14,7 +14,7 @@ use super::types::*;
 /// Two phases:
 ///   4. Schema safety: apply migrations in scratch schema, check for forbidden DDL
 ///   5. Compatibility: diff against active snapshot set, check dependencies
-pub async fn validate_stage2(
+pub(crate) async fn validate_stage2(
     change_set_id: Uuid,
     manifest: &ChangeSetManifest,
     artifacts: &[ChangeSetArtifact],

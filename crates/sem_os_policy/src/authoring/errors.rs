@@ -9,80 +9,80 @@
 // ── Stage 1: Validation (V:*) ──────────────────────────────────
 
 /// Artifact content hash does not match declared hash.
-pub const V_HASH_MISMATCH: &str = "V:HASH:MISMATCH";
+pub(crate) const V_HASH_MISMATCH: &str = "V:HASH:MISMATCH";
 /// An artifact declared in the manifest is missing from the bundle.
-pub const V_HASH_MISSING_ARTIFACT: &str = "V:HASH:MISSING_ARTIFACT";
+pub(crate) const V_HASH_MISSING_ARTIFACT: &str = "V:HASH:MISSING_ARTIFACT";
 
 /// SQL migration cannot be parsed.
-pub const V_PARSE_SQL_SYNTAX: &str = "V:PARSE:SQL_SYNTAX";
+pub(crate) const V_PARSE_SQL_SYNTAX: &str = "V:PARSE:SQL_SYNTAX";
 /// YAML artifact has invalid syntax.
-pub const V_PARSE_YAML_SYNTAX: &str = "V:PARSE:YAML_SYNTAX";
+pub(crate) const V_PARSE_YAML_SYNTAX: &str = "V:PARSE:YAML_SYNTAX";
 /// YAML artifact does not conform to expected schema.
-pub const V_PARSE_YAML_SCHEMA: &str = "V:PARSE:YAML_SCHEMA";
+pub(crate) const V_PARSE_YAML_SCHEMA: &str = "V:PARSE:YAML_SCHEMA";
 /// JSON artifact has invalid syntax.
-pub const V_PARSE_JSON_SYNTAX: &str = "V:PARSE:JSON_SYNTAX";
+pub(crate) const V_PARSE_JSON_SYNTAX: &str = "V:PARSE:JSON_SYNTAX";
 /// JSON artifact does not conform to expected schema.
-pub const V_PARSE_JSON_SCHEMA: &str = "V:PARSE:JSON_SCHEMA";
+pub(crate) const V_PARSE_JSON_SCHEMA: &str = "V:PARSE:JSON_SCHEMA";
 
 /// Referenced entity type not found in registry or bundle.
-pub const V_REF_MISSING_ENTITY: &str = "V:REF:MISSING_ENTITY";
+pub(crate) const V_REF_MISSING_ENTITY: &str = "V:REF:MISSING_ENTITY";
 /// Referenced domain not found.
-pub const V_REF_MISSING_DOMAIN: &str = "V:REF:MISSING_DOMAIN";
+pub(crate) const V_REF_MISSING_DOMAIN: &str = "V:REF:MISSING_DOMAIN";
 /// Referenced attribute not found.
-pub const V_REF_MISSING_ATTRIBUTE: &str = "V:REF:MISSING_ATTRIBUTE";
+pub(crate) const V_REF_MISSING_ATTRIBUTE: &str = "V:REF:MISSING_ATTRIBUTE";
 /// Declared dependency ChangeSet not found.
-pub const V_REF_MISSING_DEPENDENCY: &str = "V:REF:MISSING_DEPENDENCY";
+pub(crate) const V_REF_MISSING_DEPENDENCY: &str = "V:REF:MISSING_DEPENDENCY";
 /// Circular dependency detected among ChangeSet dependencies.
-pub const V_REF_CIRCULAR_DEPENDENCY: &str = "V:REF:CIRCULAR_DEPENDENCY";
+pub(crate) const V_REF_CIRCULAR_DEPENDENCY: &str = "V:REF:CIRCULAR_DEPENDENCY";
 
 /// Attribute data type mismatch between contract and definition.
-pub const V_TYPE_ATTRIBUTE_MISMATCH: &str = "V:TYPE:ATTRIBUTE_MISMATCH";
+pub(crate) const V_TYPE_ATTRIBUTE_MISMATCH: &str = "V:TYPE:ATTRIBUTE_MISMATCH";
 /// Verb contract is missing required fields.
-pub const V_TYPE_CONTRACT_INCOMPLETE: &str = "V:TYPE:CONTRACT_INCOMPLETE";
+pub(crate) const V_TYPE_CONTRACT_INCOMPLETE: &str = "V:TYPE:CONTRACT_INCOMPLETE";
 /// Derivation lineage chain is broken.
-pub const V_TYPE_LINEAGE_BROKEN: &str = "V:TYPE:LINEAGE_BROKEN";
+pub(crate) const V_TYPE_LINEAGE_BROKEN: &str = "V:TYPE:LINEAGE_BROKEN";
 
 // ── Stage 2: Dry-Run (D:*) ────────────────────────────────────
 
 /// Migration SQL failed to apply in scratch schema.
-pub const D_SCHEMA_APPLY_FAILED: &str = "D:SCHEMA:APPLY_FAILED";
+pub(crate) const D_SCHEMA_APPLY_FAILED: &str = "D:SCHEMA:APPLY_FAILED";
 /// Migration contains non-transactional DDL (e.g., CREATE INDEX CONCURRENTLY).
-pub const D_SCHEMA_NON_TRANSACTIONAL_DDL: &str = "D:SCHEMA:NON_TRANSACTIONAL_DDL";
+pub(crate) const D_SCHEMA_NON_TRANSACTIONAL_DDL: &str = "D:SCHEMA:NON_TRANSACTIONAL_DDL";
 /// Migration contains forbidden DDL (e.g., DROP TABLE without breaking_change=true).
-pub const D_SCHEMA_FORBIDDEN_DDL: &str = "D:SCHEMA:FORBIDDEN_DDL";
+pub(crate) const D_SCHEMA_FORBIDDEN_DDL: &str = "D:SCHEMA:FORBIDDEN_DDL";
 /// No corresponding down migration for a forward migration.
-pub const D_SCHEMA_DOWN_MISSING: &str = "D:SCHEMA:DOWN_MISSING";
+pub(crate) const D_SCHEMA_DOWN_MISSING: &str = "D:SCHEMA:DOWN_MISSING";
 /// Down migration failed during scratch cleanup.
-pub const D_SCHEMA_DOWN_FAILED: &str = "D:SCHEMA:DOWN_FAILED";
+pub(crate) const D_SCHEMA_DOWN_FAILED: &str = "D:SCHEMA:DOWN_FAILED";
 
 /// Breaking change not declared as such in the manifest.
-pub const D_COMPAT_BREAKING_UNDECLARED: &str = "D:COMPAT:BREAKING_UNDECLARED";
+pub(crate) const D_COMPAT_BREAKING_UNDECLARED: &str = "D:COMPAT:BREAKING_UNDECLARED";
 /// Attribute definition conflicts with existing active snapshot.
-pub const D_COMPAT_ATTR_CONFLICT: &str = "D:COMPAT:ATTR_CONFLICT";
+pub(crate) const D_COMPAT_ATTR_CONFLICT: &str = "D:COMPAT:ATTR_CONFLICT";
 /// Verb contract conflicts with existing active snapshot.
-pub const D_COMPAT_VERB_CONFLICT: &str = "D:COMPAT:VERB_CONFLICT";
+pub(crate) const D_COMPAT_VERB_CONFLICT: &str = "D:COMPAT:VERB_CONFLICT";
 /// A dependency ChangeSet has not been published yet.
-pub const D_COMPAT_DEPENDENCY_UNPUBLISHED: &str = "D:COMPAT:DEPENDENCY_UNPUBLISHED";
+pub(crate) const D_COMPAT_DEPENDENCY_UNPUBLISHED: &str = "D:COMPAT:DEPENDENCY_UNPUBLISHED";
 /// A dependency ChangeSet is in a failed state.
-pub const D_COMPAT_DEPENDENCY_FAILED: &str = "D:COMPAT:DEPENDENCY_FAILED";
+pub(crate) const D_COMPAT_DEPENDENCY_FAILED: &str = "D:COMPAT:DEPENDENCY_FAILED";
 /// Supersession target is already superseded or not in a terminal state.
-pub const D_COMPAT_SUPERSESSION_CONFLICT: &str = "D:COMPAT:SUPERSESSION_CONFLICT";
+pub(crate) const D_COMPAT_SUPERSESSION_CONFLICT: &str = "D:COMPAT:SUPERSESSION_CONFLICT";
 
 /// Governed ChangeSet requires approval before publish.
-pub const D_POLICY_APPROVAL_REQUIRED: &str = "D:POLICY:APPROVAL_REQUIRED";
+pub(crate) const D_POLICY_APPROVAL_REQUIRED: &str = "D:POLICY:APPROVAL_REQUIRED";
 /// Actor does not have sufficient role for this operation.
-pub const D_POLICY_ROLE_INSUFFICIENT: &str = "D:POLICY:ROLE_INSUFFICIENT";
+pub(crate) const D_POLICY_ROLE_INSUFFICIENT: &str = "D:POLICY:ROLE_INSUFFICIENT";
 
 // ── Publish-time (PUBLISH:*) ───────────────────────────────────
 
 /// Active snapshot set changed since dry-run was evaluated.
-pub const PUBLISH_DRIFT_DETECTED: &str = "PUBLISH:DRIFT_DETECTED";
+pub(crate) const PUBLISH_DRIFT_DETECTED: &str = "PUBLISH:DRIFT_DETECTED";
 /// Could not acquire advisory lock for single-publisher gate.
-pub const PUBLISH_LOCK_CONTENTION: &str = "PUBLISH:LOCK_CONTENTION";
+pub(crate) const PUBLISH_LOCK_CONTENTION: &str = "PUBLISH:LOCK_CONTENTION";
 /// ChangeSet is not in the correct status for publish.
-pub const PUBLISH_STATUS_INVALID: &str = "PUBLISH:STATUS_INVALID";
+pub(crate) const PUBLISH_STATUS_INVALID: &str = "PUBLISH:STATUS_INVALID";
 /// Batch publish dependency graph contains a cycle.
-pub const PUBLISH_BATCH_CYCLE_DETECTED: &str = "PUBLISH:BATCH_CYCLE_DETECTED";
+pub(crate) const PUBLISH_BATCH_CYCLE_DETECTED: &str = "PUBLISH:BATCH_CYCLE_DETECTED";
 
 #[cfg(test)]
 mod tests {

@@ -16,7 +16,7 @@ use super::types::*;
 ///   1. Artifact integrity (hash verification, syntax parsing)
 ///   2. Reference resolution (entity types, domains, attributes, dependency cycle detection)
 ///   3. Semantic consistency (attribute type checks, verb contract completeness, lineage)
-pub fn validate_stage1(
+pub(crate) fn validate_stage1(
     manifest: &ChangeSetManifest,
     artifacts: &[ChangeSetArtifact],
 ) -> ValidationReport {

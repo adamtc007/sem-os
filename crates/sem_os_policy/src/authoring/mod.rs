@@ -18,15 +18,21 @@
 // re-export so `sem_os_policy::authoring::agent_mode::AgentMode` still
 // resolves.
 pub use sem_os_types::agent_mode;
-pub mod canonical_hash;
-pub mod diff;
-pub mod errors;
+#[allow(dead_code)]
+pub(crate) mod canonical_hash; // content-addressed hashing — internal pipeline detail
+#[allow(dead_code)]
+pub(crate) mod diff;           // structural diff — internal pipeline detail
+#[allow(dead_code)]
+pub(crate) mod errors;         // structured error codes — internal, exposed via SemOsError at boundary
 pub mod ports;
 pub mod types;
-pub mod validate_stage1;
-pub mod validate_stage2;
+#[allow(dead_code)]
+pub(crate) mod validate_stage1; // pure validation stage — internal pipeline detail
+#[allow(dead_code)]
+pub(crate) mod validate_stage2; // DB-backed validation stage — internal pipeline detail
 
 pub mod bundle;
 pub mod cleanup;
 pub mod governance_verbs;
-pub mod metrics;
+#[allow(dead_code)]
+pub(crate) mod metrics;         // internal instrumentation

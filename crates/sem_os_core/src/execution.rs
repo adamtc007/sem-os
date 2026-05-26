@@ -12,4 +12,4 @@
 //! This module is kept as an empty file with a stable path so upstream
 //! import-path migration can land in a single PR per crate without
 //! breaking the crate graph mid-bisect. A follow-up slice removes the
-//! `pub mod execution;` declaration entirely.
+//! `pub(crate) mod execution;` declaration entirely.

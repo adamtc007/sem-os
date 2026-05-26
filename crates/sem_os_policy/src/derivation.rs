@@ -14,7 +14,7 @@ use sem_os_types::SecurityLabel;
 // ── Derivation function trait ─────────────────────────────────
 
 /// A pure function that computes a derived attribute value from inputs.
-pub trait DerivationFn: Send + Sync {
+pub(crate) trait DerivationFn: Send + Sync {
     fn evaluate(&self, inputs: &serde_json::Value) -> Result<serde_json::Value, DerivationError>;
 }
 
@@ -30,7 +30,7 @@ where
 // ── Errors ────────────────────────────────────────────────────
 
 #[derive(Debug, Clone, PartialEq, Eq)]
-pub enum DerivationError {
+pub(crate) enum DerivationError {
     FunctionNotFound { ref_name: String },
     NullRequiredInput { attribute_fqn: String },
     ExecutionFailed { message: String },
@@ -71,38 +71,38 @@ impl std::error::Error for DerivationError {}
 /// Result of evaluating a derivation spec.
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[cfg_attr(test, derive(PartialEq))]
-pub struct DerivationResult {
-    pub value: serde_json::Value,
-    pub spec_snapshot_id: Uuid,
-    pub input_snapshot_ids: Vec<Uuid>,
-    pub inherited_label: SecurityLabel,
-    pub evaluated_at: DateTime<Utc>,
+pub(crate) struct DerivationResult {
+    pub(crate) value: serde_json::Value,
+    pub(crate) spec_snapshot_id: Uuid,
+    pub(crate) input_snapshot_ids: Vec<Uuid>,
+    pub(crate) inherited_label: SecurityLabel,
+    pub(crate) evaluated_at: DateTime<Utc>,
 }
 
 // ── Function registry ─────────────────────────────────────────
 
 /// Registry mapping function names to evaluation implementations.
-pub struct DerivationFunctionRegistry {
+pub(crate) struct DerivationFunctionRegistry {
     functions: HashMap<String, Arc<dyn DerivationFn>>,
 }
 
 impl DerivationFunctionRegistry {
-    pub fn new() -> Self {
+    pub(crate) fn new() -> Self {
         Self {
             functions: HashMap::new(),
         }
     }
 
-    pub fn register(&mut self, name: &str, func: Arc<dyn DerivationFn>) {
+    pub(crate) fn register(&mut self, name: &str, func: Arc<dyn DerivationFn>) {
         self.functions.insert(name.to_string(), func);
     }
 
-    pub fn get(&self, name: &str) -> Option<&Arc<dyn DerivationFn>> {
+    pub(crate) fn get(&self, name: &str) -> Option<&Arc<dyn DerivationFn>> {
         self.functions.get(name)
     }
 
     /// Evaluate a derivation spec against provided inputs.
-    pub fn evaluate(
+    pub(crate) fn evaluate(
         &self,
         spec: &DerivationSpecBody,
         inputs: &serde_json::Value,

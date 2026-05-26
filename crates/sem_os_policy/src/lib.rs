@@ -40,20 +40,28 @@
 //! Modules land via `git mv` from `sem_os_core/src/`. Compat re-exports
 //! from `sem_os_core` until Phase 12 cleanup.
 
+// ── Public API surface ──────────────────────────────────────────────────────
+// Modules without a comment are part of the intended external contract.
+// `pub(crate)` modules are implementation detail — not accessible to consumers.
+// External import paths in use: see ob-poc/rust grep for sem_os_policy::.
+// ─────────────────────────────────────────────────────────────────────────────
+
 pub mod abac;
 pub mod acp_projection;
 pub mod affinity;
 pub mod authoring;
 pub mod context_policy;
 pub mod context_resolution;
-pub mod derivation;
+#[allow(dead_code)]
+pub(crate) mod derivation; // internal derivation logic — not in external import surface
 pub mod diagram;
 pub mod domain_pack;
 pub mod enforce;
-pub mod gates;
+#[allow(dead_code)]
+pub(crate) mod gates;      // internal publish-gate evaluation — not in external import surface
 pub mod grounding;
 pub mod observatory;
-pub mod security;
+pub(crate) mod security;   // internal ABAC rule checking — not in external import surface
 pub mod service;
 pub mod state_simulation;
 pub mod stewardship;

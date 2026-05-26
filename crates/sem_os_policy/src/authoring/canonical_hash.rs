@@ -13,13 +13,13 @@ use sha2::{Digest, Sha256};
 use super::types::{ArtifactType, ChangeSetArtifact, ChangeSetManifest};
 
 /// Current hash version prefix.
-pub const HASH_VERSION: &str = "v1";
+pub(crate) const HASH_VERSION: &str = "v1";
 
 /// Compute the content hash for a ChangeSet bundle.
 ///
 /// Returns the hex-encoded SHA-256 hash, without the version prefix.
 /// The caller stores `HASH_VERSION` separately.
-pub fn compute_content_hash(
+pub(crate) fn compute_content_hash(
     manifest: &ChangeSetManifest,
     artifacts: &[ChangeSetArtifact],
 ) -> String {
@@ -58,7 +58,7 @@ pub fn compute_content_hash(
 }
 
 /// Compute the content hash for a single artifact.
-pub fn compute_artifact_hash(content: &str) -> String {
+pub(crate) fn compute_artifact_hash(content: &str) -> String {
     let normalized = normalize_content(content);
     let mut hasher = Sha256::new();
     hasher.update(normalized.as_bytes());
@@ -84,7 +84,7 @@ fn normalize_content(content: &str) -> String {
 
 /// Attempt to canonicalize JSON content (sorted keys).
 /// Returns the canonical form if valid JSON, otherwise returns input unchanged.
-pub fn try_canonicalize_json(content: &str) -> String {
+pub(crate) fn try_canonicalize_json(content: &str) -> String {
     match serde_json::from_str::<serde_json::Value>(content) {
         Ok(value) => serde_json::to_string(&value).unwrap_or_else(|_| content.to_string()),
         Err(_) => content.to_string(),
@@ -93,7 +93,7 @@ pub fn try_canonicalize_json(content: &str) -> String {
 
 /// Attempt to canonicalize YAML content by converting to sorted JSON.
 /// Returns the canonical JSON form if valid YAML, otherwise returns input unchanged.
-pub fn try_canonicalize_yaml(content: &str) -> String {
+pub(crate) fn try_canonicalize_yaml(content: &str) -> String {
     match serde_yaml::from_str::<serde_json::Value>(content) {
         Ok(value) => serde_json::to_string(&value).unwrap_or_else(|_| content.to_string()),
         Err(_) => content.to_string(),
@@ -101,7 +101,7 @@ pub fn try_canonicalize_yaml(content: &str) -> String {
 }
 
 /// Compute a content hash for an artifact, with type-aware canonicalization.
-pub fn compute_artifact_hash_typed(content: &str, artifact_type: ArtifactType) -> String {
+pub(crate) fn compute_artifact_hash_typed(content: &str, artifact_type: ArtifactType) -> String {
     let canonical = match artifact_type {
         ArtifactType::AttributeJson | ArtifactType::TaxonomyJson | ArtifactType::DocJson => {
             try_canonicalize_json(content)

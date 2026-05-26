@@ -6,8 +6,8 @@
 //! - **Governed approval**: Governed-tier snapshots require an approver
 //! - **Version monotonicity**: New versions must be >= predecessor
 
-pub mod governance;
-pub mod technical;
+pub(crate) mod governance;
+pub(crate) mod technical;
 
 use sem_os_types::{
     Classification, GovernanceTier, SecurityLabel, SnapshotMeta, SnapshotRow, TrustClass,
@@ -16,10 +16,10 @@ use sem_os_types::{
 /// Result of a single gate check.
 #[derive(Debug, Clone)]
 #[must_use]
-pub struct GateResult {
-    pub gate_name: &'static str,
-    pub passed: bool,
-    pub reason: Option<String>,
+pub(crate) struct GateResult {
+    pub(crate) gate_name: &'static str,
+    pub(crate) passed: bool,
+    pub(crate) reason: Option<String>,
 }
 
 impl GateResult {
@@ -42,20 +42,20 @@ impl GateResult {
 
 /// Aggregated result of all publish gates.
 #[derive(Debug, Clone)]
-pub struct PublishGateResult {
-    pub results: Vec<GateResult>,
+pub(crate) struct PublishGateResult {
+    pub(crate) results: Vec<GateResult>,
 }
 
 impl PublishGateResult {
-    pub fn all_passed(&self) -> bool {
+    pub(crate) fn all_passed(&self) -> bool {
         self.results.iter().all(|r| r.passed)
     }
 
-    pub fn failures(&self) -> Vec<&GateResult> {
+    pub(crate) fn failures(&self) -> Vec<&GateResult> {
         self.results.iter().filter(|r| !r.passed).collect()
     }
 
-    pub fn failure_messages(&self) -> Vec<String> {
+    pub(crate) fn failure_messages(&self) -> Vec<String> {
         self.failures()
             .iter()
             .filter_map(|r| {
@@ -71,7 +71,7 @@ impl PublishGateResult {
 
 /// **Proof Rule**: Only governed-tier objects may have TrustClass::Proof.
 /// This mirrors the DB CHECK constraint: `trust_class != 'proof' OR governance_tier = 'governed'`
-pub fn check_proof_rule(tier: GovernanceTier, trust: TrustClass) -> GateResult {
+pub(crate) fn check_proof_rule(tier: GovernanceTier, trust: TrustClass) -> GateResult {
     if trust == TrustClass::Proof && tier == GovernanceTier::Operational {
         GateResult::fail(
             "proof_rule",
@@ -84,7 +84,7 @@ pub fn check_proof_rule(tier: GovernanceTier, trust: TrustClass) -> GateResult {
 }
 
 /// **Security label validation**: Ensure the classification is populated.
-pub fn check_security_label(label: &SecurityLabel) -> GateResult {
+pub(crate) fn check_security_label(label: &SecurityLabel) -> GateResult {
     // PII data must have at least Confidential classification
     if label.pii
         && matches!(
@@ -102,7 +102,7 @@ pub fn check_security_label(label: &SecurityLabel) -> GateResult {
 }
 
 /// **Governed approval gate**: Governed-tier snapshots must have an approver.
-pub fn check_governed_approval(meta: &SnapshotMeta) -> GateResult {
+pub(crate) fn check_governed_approval(meta: &SnapshotMeta) -> GateResult {
     if meta.governance_tier == GovernanceTier::Governed && meta.approved_by.is_none() {
         GateResult::fail(
             "governed_approval",
@@ -114,7 +114,7 @@ pub fn check_governed_approval(meta: &SnapshotMeta) -> GateResult {
 }
 
 /// **Version monotonicity**: New version must be >= predecessor version.
-pub fn check_version_monotonicity(
+pub(crate) fn check_version_monotonicity(
     meta: &SnapshotMeta,
     predecessor: Option<&SnapshotRow>,
 ) -> GateResult {
@@ -140,7 +140,7 @@ pub fn check_version_monotonicity(
 ///
 /// Returns a `PublishGateResult` containing the outcome of every gate.
 /// The caller should check `all_passed()` before persisting.
-pub fn evaluate_publish_gates(
+pub(crate) fn evaluate_publish_gates(
     meta: &SnapshotMeta,
     predecessor: Option<&SnapshotRow>,
 ) -> PublishGateResult {
@@ -161,21 +161,21 @@ pub fn evaluate_publish_gates(
 /// Missing context fields are skipped gracefully (gates that need them produce
 /// no failures rather than panicking).
 #[derive(Default)]
-pub struct ExtendedGateContext {
+pub(crate) struct ExtendedGateContext {
     /// Predecessor snapshot for version/integrity checks.
-    pub predecessor: Option<SnapshotRow>,
+    pub(crate) predecessor: Option<SnapshotRow>,
     /// Taxonomy memberships for this object.
-    pub memberships: Vec<String>,
+    pub(crate) memberships: Vec<String>,
     /// Known verb FQNs in the registry (for macro expansion checks).
-    pub known_verb_fqns: std::collections::HashSet<String>,
+    pub(crate) known_verb_fqns: std::collections::HashSet<String>,
     /// Current timestamp for review cycle checks.
-    pub now: Option<chrono::DateTime<chrono::Utc>>,
+    pub(crate) now: Option<chrono::DateTime<chrono::Utc>>,
 }
 
 /// Run all extended gates (technical + governance) against a snapshot.
 ///
 /// Returns a `Vec<GateFailure>` — empty means all gates passed.
-pub fn evaluate_extended_gates(
+pub(crate) fn evaluate_extended_gates(
     snapshot: &SnapshotRow,
     ctx: &ExtendedGateContext,
 ) -> Vec<GateFailure> {
@@ -251,7 +251,7 @@ pub fn evaluate_extended_gates(
 /// A publish is blocked if:
 /// - Any simple gate fails, OR
 /// - Any extended gate has `GateSeverity::Error` in `GateMode::Enforce`
-pub fn evaluate_all_publish_gates(
+pub(crate) fn evaluate_all_publish_gates(
     meta: &SnapshotMeta,
     snapshot: &SnapshotRow,
     ctx: &ExtendedGateContext,
@@ -273,19 +273,19 @@ pub fn evaluate_all_publish_gates(
 
 /// Unified result merging both simple and extended gate frameworks.
 #[derive(Debug, Clone)]
-pub struct UnifiedPublishGateResult {
-    pub simple: PublishGateResult,
-    pub extended: ExtendedPublishGateResult,
+pub(crate) struct UnifiedPublishGateResult {
+    pub(crate) simple: PublishGateResult,
+    pub(crate) extended: ExtendedPublishGateResult,
 }
 
 impl UnifiedPublishGateResult {
     /// Should this result block a publish?
-    pub fn should_block(&self) -> bool {
+    pub(crate) fn should_block(&self) -> bool {
         !self.simple.all_passed() || self.extended.should_block()
     }
 
     /// All failure messages from both frameworks.
-    pub fn all_failure_messages(&self) -> Vec<String> {
+    pub(crate) fn all_failure_messages(&self) -> Vec<String> {
         let mut msgs = self.simple.failure_messages();
         for f in &self.extended.failures {
             if f.severity == GateSeverity::Error {
@@ -297,7 +297,7 @@ impl UnifiedPublishGateResult {
     }
 
     /// Total error count across both frameworks.
-    pub fn error_count(&self) -> usize {
+    pub(crate) fn error_count(&self) -> usize {
         self.simple.failures().len()
             + self
                 .extended
@@ -308,7 +308,7 @@ impl UnifiedPublishGateResult {
     }
 
     /// Total warning count (extended only — simple has no warnings).
-    pub fn warning_count(&self) -> usize {
+    pub(crate) fn warning_count(&self) -> usize {
         self.extended
             .failures
             .iter()
@@ -324,7 +324,7 @@ impl UnifiedPublishGateResult {
 ///
 /// This enforces the invariant: operational-tier evidence cannot
 /// substantiate a Proof-class claim.
-pub fn check_evidence_proof_rule(
+pub(crate) fn check_evidence_proof_rule(
     evidence_tier: GovernanceTier,
     referenced_attribute_trust_class: TrustClass,
 ) -> GateResult {
@@ -348,7 +348,7 @@ use uuid::Uuid;
 /// Gate enforcement mode — determines whether failures block or warn.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "snake_case")]
-pub enum GateMode {
+pub(crate) enum GateMode {
     /// Hard-fail: blocks publish.
     Enforce,
     /// Soft: emits warnings, does not block.
@@ -357,23 +357,23 @@ pub enum GateMode {
 
 // `GateSeverity` lives in `sem_os_types::GateSeverity`; re-exported here for
 // backwards compatibility with existing call sites under `gates::GateSeverity`.
-pub use sem_os_types::GateSeverity;
+pub(crate) use sem_os_types::GateSeverity;
 
 /// Structured gate failure with metadata for audit and remediation.
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct GateFailure {
-    pub gate_name: String,
-    pub severity: GateSeverity,
-    pub object_type: String,
-    pub object_fqn: Option<String>,
-    pub snapshot_id: Option<Uuid>,
-    pub message: String,
-    pub remediation_hint: Option<String>,
+pub(crate) struct GateFailure {
+    pub(crate) gate_name: String,
+    pub(crate) severity: GateSeverity,
+    pub(crate) object_type: String,
+    pub(crate) object_fqn: Option<String>,
+    pub(crate) snapshot_id: Option<Uuid>,
+    pub(crate) message: String,
+    pub(crate) remediation_hint: Option<String>,
 }
 
 impl GateFailure {
     /// Create an error-level gate failure.
-    pub fn error(
+    pub(crate) fn error(
         gate_name: impl Into<String>,
         object_type: impl Into<String>,
         message: impl Into<String>,
@@ -390,7 +390,7 @@ impl GateFailure {
     }
 
     /// Create a warning-level gate failure.
-    pub fn warning(
+    pub(crate) fn warning(
         gate_name: impl Into<String>,
         object_type: impl Into<String>,
         message: impl Into<String>,
@@ -407,19 +407,19 @@ impl GateFailure {
     }
 
     /// Builder: set the object FQN.
-    pub fn with_fqn(mut self, fqn: impl Into<String>) -> Self {
+    pub(crate) fn with_fqn(mut self, fqn: impl Into<String>) -> Self {
         self.object_fqn = Some(fqn.into());
         self
     }
 
     /// Builder: set the snapshot ID.
-    pub fn with_snapshot_id(mut self, id: Uuid) -> Self {
+    pub(crate) fn with_snapshot_id(mut self, id: Uuid) -> Self {
         self.snapshot_id = Some(id);
         self
     }
 
     /// Builder: set a remediation hint.
-    pub fn with_hint(mut self, hint: impl Into<String>) -> Self {
+    pub(crate) fn with_hint(mut self, hint: impl Into<String>) -> Self {
         self.remediation_hint = Some(hint.into());
         self
     }
@@ -427,33 +427,33 @@ impl GateFailure {
 
 /// Extended publish gate result with mode control.
 #[derive(Debug, Clone)]
-pub struct ExtendedPublishGateResult {
-    pub failures: Vec<GateFailure>,
-    pub mode: GateMode,
+pub(crate) struct ExtendedPublishGateResult {
+    pub(crate) failures: Vec<GateFailure>,
+    pub(crate) mode: GateMode,
 }
 
 impl ExtendedPublishGateResult {
     /// Are there any error-level failures?
-    pub fn has_errors(&self) -> bool {
+    pub(crate) fn has_errors(&self) -> bool {
         self.failures
             .iter()
             .any(|f| f.severity == GateSeverity::Error)
     }
 
     /// Are there any warning-level failures?
-    pub fn has_warnings(&self) -> bool {
+    pub(crate) fn has_warnings(&self) -> bool {
         self.failures
             .iter()
             .any(|f| f.severity == GateSeverity::Warning)
     }
 
     /// Should this result block a publish?
-    pub fn should_block(&self) -> bool {
+    pub(crate) fn should_block(&self) -> bool {
         self.has_errors() && self.mode == GateMode::Enforce
     }
 
     /// Human-readable failure report.
-    pub fn failure_report(&self) -> String {
+    pub(crate) fn failure_report(&self) -> String {
         if self.failures.is_empty() {
             return "All gates passed.".into();
         }
@@ -472,7 +472,7 @@ impl ExtendedPublishGateResult {
     }
 
     /// Machine-readable JSON output.
-    pub fn to_json(&self) -> serde_json::Value {
+    pub(crate) fn to_json(&self) -> serde_json::Value {
         serde_json::json!({
             "mode": format!("{:?}", self.mode).to_lowercase(),
             "blocked": self.should_block(),
@@ -491,7 +491,7 @@ use sem_os_types::EvidenceGrade;
 /// Check for cycles in a set of derivation specs.
 ///
 /// Builds an input→output graph and checks for cycles via topological sort.
-pub fn check_derivation_cycle(specs: &[DerivationSpecBody]) -> Vec<GateFailure> {
+pub(crate) fn check_derivation_cycle(specs: &[DerivationSpecBody]) -> Vec<GateFailure> {
     use std::collections::{HashMap, HashSet, VecDeque};
 
     // Build adjacency: output_fqn → set of input_fqns
@@ -578,7 +578,7 @@ pub fn check_derivation_cycle(specs: &[DerivationSpecBody]) -> Vec<GateFailure> 
 /// Check that operational derivations do not declare evidence-bearing grades.
 ///
 /// Invariant: operational-tier derivations cannot be used as regulatory evidence.
-pub fn check_derivation_evidence_grade(
+pub(crate) fn check_derivation_evidence_grade(
     spec: &DerivationSpecBody,
     tier: GovernanceTier,
 ) -> Vec<GateFailure> {
@@ -607,7 +607,7 @@ pub fn check_derivation_evidence_grade(
 ///
 /// Validates that the output and all input attribute FQNs exist in the
 /// provided set of known attribute FQNs.
-pub fn check_derivation_type_compatibility(
+pub(crate) fn check_derivation_type_compatibility(
     spec: &DerivationSpecBody,
     known_attribute_fqns: &std::collections::HashSet<String>,
 ) -> Vec<GateFailure> {
