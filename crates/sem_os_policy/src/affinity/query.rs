@@ -10,19 +10,19 @@ use super::types::*;
 
 impl AffinityGraph {
     /// Find all verbs that read/write/produce/consume a given table.
-    pub(crate) fn verbs_for_table(&self, schema: &str, table: &str) -> Vec<VerbAffinity> {
+    pub fn verbs_for_table(&self, schema: &str, table: &str) -> Vec<VerbAffinity> {
         let key = format!("table:{schema}:{table}");
         self.verbs_for_data_key(&key)
     }
 
     /// Find all verbs that produce or consume a given attribute.
-    pub(crate) fn verbs_for_attribute(&self, attr_fqn: &str) -> Vec<VerbAffinity> {
+    pub fn verbs_for_attribute(&self, attr_fqn: &str) -> Vec<VerbAffinity> {
         let key = format!("attribute:{attr_fqn}");
         self.verbs_for_data_key(&key)
     }
 
     /// Find all verbs operating on a given entity type (via entity→table→verbs + direct edges).
-    pub(crate) fn verbs_for_entity_type(&self, entity_fqn: &str) -> Vec<VerbAffinity> {
+    pub fn verbs_for_entity_type(&self, entity_fqn: &str) -> Vec<VerbAffinity> {
         let mut results = Vec::new();
         let mut seen = HashSet::new();
 
@@ -50,7 +50,7 @@ impl AffinityGraph {
     }
 
     /// Find all data assets a verb touches (tables, columns, attributes, entities).
-    pub(crate) fn data_for_verb(&self, verb_fqn: &str) -> Vec<DataAffinity> {
+    pub fn data_for_verb(&self, verb_fqn: &str) -> Vec<DataAffinity> {
         let Some(edge_indices) = self.verb_to_data.get(verb_fqn) else {
             return Vec::new();
         };
@@ -67,7 +67,7 @@ impl AffinityGraph {
 
     /// Transitive data footprint: collect all data assets a verb touches,
     /// following arg lookups up to `depth` hops.
-    pub(crate) fn data_footprint(&self, verb_fqn: &str, depth: u32) -> DataFootprint {
+    pub fn data_footprint(&self, verb_fqn: &str, depth: u32) -> DataFootprint {
         let mut footprint = DataFootprint::default();
         let mut visited_verbs = HashSet::new();
         self.collect_footprint(verb_fqn, depth, &mut footprint, &mut visited_verbs);
@@ -75,7 +75,7 @@ impl AffinityGraph {
     }
 
     /// Find verbs sharing data dependencies (same table/attribute) with the given verb.
-    pub(crate) fn adjacent_verbs(&self, verb_fqn: &str) -> Vec<(String, Vec<DataRef>)> {
+    pub fn adjacent_verbs(&self, verb_fqn: &str) -> Vec<(String, Vec<DataRef>)> {
         // Collect all data ref keys this verb touches
         let Some(edge_indices) = self.verb_to_data.get(verb_fqn) else {
             return Vec::new();
@@ -129,7 +129,7 @@ impl AffinityGraph {
     /// Takes `known_tables` as parameter — the caller provides the physical
     /// schema tables (e.g. from `extract_schema()`). The AffinityGraph itself
     /// doesn't know all physical tables.
-    pub(crate) fn orphan_tables(&self, known_tables: &[TableRef]) -> Vec<TableRef> {
+    pub fn orphan_tables(&self, known_tables: &[TableRef]) -> Vec<TableRef> {
         known_tables
             .iter()
             .filter(|t| {
@@ -141,7 +141,7 @@ impl AffinityGraph {
     }
 
     /// Verbs with no data affinity (disconnected operations).
-    pub(crate) fn orphan_verbs(&self) -> Vec<String> {
+    pub fn orphan_verbs(&self) -> Vec<String> {
         let verbs_with_data: HashSet<&str> = self
             .verb_to_data
             .iter()
@@ -160,7 +160,7 @@ impl AffinityGraph {
     }
 
     /// Attributes with source but no sinks (written but never read).
-    pub(crate) fn write_only_attributes(&self) -> Vec<String> {
+    pub fn write_only_attributes(&self) -> Vec<String> {
         // Collect attributes that are produced (have ProducesAttribute edges)
         let mut produced: HashSet<String> = HashSet::new();
         let mut consumed: HashSet<String> = HashSet::new();
@@ -183,7 +183,7 @@ impl AffinityGraph {
     }
 
     /// Attributes with sinks but no source (read before written).
-    pub(crate) fn read_before_write_attributes(&self) -> Vec<String> {
+    pub fn read_before_write_attributes(&self) -> Vec<String> {
         let mut produced: HashSet<String> = HashSet::new();
         let mut consumed: HashSet<String> = HashSet::new();
 
