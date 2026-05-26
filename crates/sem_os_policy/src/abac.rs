@@ -150,8 +150,8 @@ pub fn evaluate_abac(
 /// # Examples
 ///
 /// ```
-/// use sem_os_core::abac::{evaluate_abac_with_evidence_grade, AccessDecision, AccessPurpose, ActorContext};
-/// use sem_os_core::types::{Classification, EvidenceGrade, SecurityLabel};
+/// use sem_os_policy::abac::{evaluate_abac_with_evidence_grade, AccessDecision, AccessPurpose, ActorContext};
+/// use sem_os_types::{Classification, EvidenceGrade, SecurityLabel};
 ///
 /// let actor = ActorContext {
 ///     actor_id: "user-1".into(),

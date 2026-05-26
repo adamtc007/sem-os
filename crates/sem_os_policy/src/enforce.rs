@@ -55,9 +55,9 @@ pub fn enforce_read(actor: &ActorContext, row: &SnapshotRow) -> EnforceResult {
 /// # Examples
 ///
 /// ```
-/// use sem_os_core::abac::{AccessDecision, ActorContext};
-/// use sem_os_core::enforce::{enforce_attribute_read, EnforceResult};
-/// use sem_os_core::types::{ChangeType, Classification, GovernanceTier, ObjectType, SecurityLabel, SnapshotRow, SnapshotStatus, TrustClass};
+/// use sem_os_policy::abac::{AccessDecision, ActorContext};
+/// use sem_os_policy::enforce::{enforce_attribute_read, EnforceResult};
+/// use sem_os_types::{ChangeType, Classification, GovernanceTier, ObjectType, SecurityLabel, SnapshotRow, SnapshotStatus, TrustClass};
 ///
 /// let row = SnapshotRow {
 ///     snapshot_id: uuid::Uuid::new_v4(),

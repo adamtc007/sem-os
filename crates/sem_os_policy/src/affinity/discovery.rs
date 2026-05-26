@@ -54,8 +54,8 @@ pub struct GovernanceContext {
 ///
 /// # Examples
 /// ```
-/// use sem_os_core::affinity::{AffinityGraph, discovery::discover_dsl};
-/// use sem_os_core::verb_contract::VerbContractBody;
+/// use sem_os_policy::affinity::{AffinityGraph, discovery::discover_dsl};
+/// use sem_os_ontology::verb_contract::VerbContractBody;
 ///
 /// let graph = AffinityGraph::build(&[]);
 /// let verbs: Vec<VerbContractBody> = Vec::new();
@@ -110,8 +110,8 @@ pub fn discover_dsl(
 ///
 /// # Examples
 /// ```
-/// use sem_os_core::affinity::{AffinityGraph, discovery::match_intent};
-/// use sem_os_core::verb_contract::VerbContractBody;
+/// use sem_os_policy::affinity::{AffinityGraph, discovery::match_intent};
+/// use sem_os_ontology::verb_contract::VerbContractBody;
 ///
 /// let graph = AffinityGraph::build(&[]);
 /// let verbs: Vec<VerbContractBody> = Vec::new();
@@ -201,8 +201,8 @@ pub fn match_intent(
 ///
 /// # Examples
 /// ```
-/// use sem_os_core::affinity::{AffinityGraph, discovery::synthesize_chain};
-/// use sem_os_core::verb_contract::VerbContractBody;
+/// use sem_os_policy::affinity::{AffinityGraph, discovery::synthesize_chain};
+/// use sem_os_ontology::verb_contract::VerbContractBody;
 ///
 /// let graph = AffinityGraph::build(&[]);
 /// let verbs: Vec<VerbContractBody> = Vec::new();
@@ -333,8 +333,8 @@ pub fn synthesize_chain(
 ///
 /// # Examples
 /// ```
-/// use sem_os_core::affinity::discovery::generate_disambiguation;
-/// use sem_os_core::verb_contract::VerbContractBody;
+/// use sem_os_policy::affinity::discovery::generate_disambiguation;
+/// use sem_os_ontology::verb_contract::VerbContractBody;
 ///
 /// let verb = VerbContractBody {
 ///     fqn: "x.y".into(),
@@ -494,8 +494,8 @@ fn token_set(text: &str) -> HashSet<String> {
 ///
 /// # Examples
 /// ```
-/// use sem_os_core::affinity::discovery::discovery_edges;
-/// use sem_os_core::affinity::AffinityGraph;
+/// use sem_os_policy::affinity::discovery::discovery_edges;
+/// use sem_os_policy::affinity::AffinityGraph;
 ///
 /// let graph = AffinityGraph::build(&[]);
 /// let edges = discovery_edges("hello", &graph, &[]);

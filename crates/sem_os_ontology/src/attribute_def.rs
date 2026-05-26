@@ -89,7 +89,7 @@ impl AttributeDataType {
     /// # Examples
     ///
     /// ```
-    /// use sem_os_core::attribute_def::AttributeDataType;
+    /// use sem_os_ontology::attribute_def::AttributeDataType;
     ///
     /// assert_eq!(AttributeDataType::String.to_pg_check_value(), "string");
     /// assert_eq!(AttributeDataType::TaxId.to_pg_check_value(), "tax_id");
@@ -121,7 +121,7 @@ impl AttributeDataType {
     /// # Examples
     ///
     /// ```
-    /// use sem_os_core::attribute_def::AttributeDataType;
+    /// use sem_os_ontology::attribute_def::AttributeDataType;
     ///
     /// assert_eq!(
     ///     AttributeDataType::from_pg_check_value("datetime"),

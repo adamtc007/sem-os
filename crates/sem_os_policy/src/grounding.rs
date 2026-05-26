@@ -50,8 +50,8 @@ impl ConstellationModel {
     /// # Examples
     /// ```rust
     /// use std::collections::HashMap;
-    /// use sem_os_core::constellation_map_def::ConstellationMapDefBody;
-    /// use sem_os_core::grounding::ConstellationModel;
+    /// use sem_os_ontology::constellation_map_def::ConstellationMapDefBody;
+    /// use sem_os_policy::grounding::ConstellationModel;
     ///
     /// let map: ConstellationMapDefBody = serde_yaml::from_str(
     ///     r#"
@@ -90,9 +90,9 @@ impl ConstellationModel {
 /// # Examples
 /// ```rust
 /// use std::collections::HashMap;
-/// use sem_os_core::constellation_map_def::ConstellationMapDefBody;
-/// use sem_os_core::grounding::{compute_slot_action_surface, ConstellationModel};
-/// use sem_os_core::state_machine_def::StateMachineDefBody;
+/// use sem_os_ontology::constellation_map_def::ConstellationMapDefBody;
+/// use sem_os_policy::grounding::{compute_slot_action_surface, ConstellationModel};
+/// use sem_os_ontology::state_machine_def::StateMachineDefBody;
 ///
 /// let map: ConstellationMapDefBody = serde_yaml::from_str(
 ///     r#"
