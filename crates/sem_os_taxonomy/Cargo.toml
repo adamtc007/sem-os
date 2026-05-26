@@ -1,0 +1,29 @@
+[package]
+name = "sem_os_taxonomy"
+version = "0.1.0"
+edition = "2021"
+description = "Semantic OS taxonomy projection — builds TaxonomyTree from registry snapshots and emits YAML/JSON for UI rendering."
+
+# Capability discipline:
+#   IN-SCOPE: building and emitting a TaxonomyTree (recursive named tree)
+#             from TaxonomyDef + TaxonomyNode + MembershipRule snapshots.
+#   OUT-OF-SCOPE: ABAC, gate evaluation, policy enforcement, database access,
+#                 Mermaid rendering, AffinityGraph, verb search.
+#
+# Hard invariant: no edge sem_os_taxonomy → sem_os_policy or sem_os_core.
+# Peers with sem_os_policy at the ontology consumer tier.
+
+[dependencies]
+sem_os_types    = { path = "../sem_os_types" }
+sem_os_ontology = { path = "../sem_os_ontology" }
+
+serde      = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+serde_yaml = "0.9"
+
+[dev-dependencies]
+chrono = { version = "0.4", features = ["serde"] }
+uuid   = { version = "1", features = ["v4"] }
+
+[lints.rust]
+unreachable_pub = "deny"

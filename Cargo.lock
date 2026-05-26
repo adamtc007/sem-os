@@ -905,6 +905,19 @@ dependencies = [
 ]
 
 [[package]]
+name = "sem_os_taxonomy"
+version = "0.1.0"
+dependencies = [
+ "chrono",
+ "sem_os_ontology",
+ "sem_os_types",
+ "serde",
+ "serde_json",
+ "serde_yaml",
+ "uuid",
+]
+
+[[package]]
 name = "sem_os_types"
 version = "0.1.0"
 dependencies = [
