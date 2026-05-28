@@ -1,8 +1,7 @@
 use dsl_core::{
     config::dag::{
-        load_domain_pack_owned_dags, ClosureType,
-        CompletenessAssertionConfig as DagCompletenessAssertionConfig, Dag, EligibilityConstraint,
-        LoadedDag, PredicateBinding, Slot as DagSlot, SlotStateMachine,
+        load_domain_pack_owned_dags, Dag, LoadedDag, PredicateBinding, Slot as DagSlot,
+        SlotStateMachine,
     },
     resolver::{
         compute_version_hash, ResolvedSlot, ResolvedSource, ResolvedTemplate, ResolvedTransition,
@@ -445,13 +444,13 @@ fn compose_slot(
         closure: gate_option(
             &mut provenance,
             "closure",
-            constellation_slot.and_then(|slot| convert_closure(slot.closure.as_ref())),
+            constellation_slot.and_then(|slot| slot.closure.clone()),
             dag_slot.and_then(|slot| slot.closure.clone()),
         ),
         eligibility: gate_option(
             &mut provenance,
             "eligibility",
-            constellation_slot.and_then(|slot| convert_eligibility(slot.eligibility.as_ref())),
+            constellation_slot.and_then(|slot| slot.eligibility.clone()),
             dag_slot.and_then(|slot| slot.eligibility.clone()),
         ),
         cardinality_max: gate_option(
@@ -487,7 +486,7 @@ fn compose_slot(
         role_guard: gate_option(
             &mut provenance,
             "role_guard",
-            constellation_slot.and_then(|slot| convert_role_guard(slot.role_guard.as_ref())),
+            constellation_slot.and_then(|slot| slot.role_guard.clone()),
             dag_slot.and_then(|slot| slot.role_guard.clone()),
         ),
         justification_required: gate_option(
@@ -506,11 +505,7 @@ fn compose_slot(
             &mut provenance,
             "completeness_assertion",
             constellation_slot.and_then(|slot| slot.completeness_assertion.clone()),
-            dag_slot.and_then(|slot| {
-                slot.completeness_assertion
-                    .as_ref()
-                    .map(convert_dag_completeness)
-            }),
+            dag_slot.and_then(|slot| slot.completeness_assertion.clone()),
         ),
         provenance,
     };
@@ -1079,49 +1074,7 @@ fn gate_vec(
     Vec::new()
 }
 
-fn convert_closure(value: Option<&core_map::ClosureType>) -> Option<ClosureType> {
-    Some(match value? {
-        core_map::ClosureType::Open => ClosureType::Open,
-        core_map::ClosureType::ClosedBounded => ClosureType::ClosedBounded,
-        core_map::ClosureType::ClosedUnbounded => ClosureType::ClosedUnbounded,
-    })
-}
 
-fn convert_eligibility(
-    value: Option<&core_map::EligibilityConstraint>,
-) -> Option<EligibilityConstraint> {
-    Some(match value? {
-        core_map::EligibilityConstraint::EntityKinds { entity_kinds } => {
-            EligibilityConstraint::EntityKinds {
-                entity_kinds: entity_kinds.clone(),
-            }
-        }
-        core_map::EligibilityConstraint::ShapeTaxonomyPosition {
-            shape_taxonomy_position,
-        } => EligibilityConstraint::ShapeTaxonomyPosition {
-            shape_taxonomy_position: shape_taxonomy_position.clone(),
-        },
-    })
-}
-
-fn convert_role_guard(
-    value: Option<&core_map::RoleGuard>,
-) -> Option<dsl_core::config::dag::RoleGuard> {
-    value.map(|guard| dsl_core::config::dag::RoleGuard {
-        any_of: guard.any_of.clone(),
-        all_of: guard.all_of.clone(),
-    })
-}
-
-fn convert_dag_completeness(
-    value: &DagCompletenessAssertionConfig,
-) -> core_map::CompletenessAssertionConfig {
-    core_map::CompletenessAssertionConfig {
-        predicate: value.predicate.clone(),
-        description: value.description.clone(),
-        extra: value.extra.clone(),
-    }
-}
 
 fn push_if_present(
     stack: &mut Vec<core_map::ConstellationMapDefBody>,
